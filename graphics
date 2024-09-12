@@ -1,0 +1,65 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.main;
+
+/**
+ *
+ * @author aradilla2025
+ */
+import java.awt.*;
+import javax.swing.*;
+// Create a constructor method
+public class Main extends JPanel{
+public Main(){
+super();
+}
+public void paintComponent(Graphics g){
+// Set color to pink for the car body
+g.setColor(Color.PINK);
+
+// Draw the car body (rectangles)
+g.fillRect(40, 150, 200, 50);    // Main body (x, y, width, height)
+g.fillRect(90, 120, 120, 40);    // Top of the car
+
+// Set color to black for the wheels
+g.setColor(Color.BLACK);
+
+// Draw the wheels (circles)
+g.fillOval(60, 190, 60, 60);     // Left wheel
+g.fillOval(180, 190, 60, 60);    // Right wheel
+
+// Set color to white for the windows
+g.setColor(Color.WHITE);
+
+// Draw the windows (rectangles)
+g.fillRect(100, 130, 30, 25);    // Left window
+g.fillRect(150, 130, 30, 25);    // Right window
+
+// Optional: add details like lines for doors
+g.setColor(Color.GRAY);
+g.drawLine(140, 150, 140, 200);  // Line to separate the doors
+
+
+
+
+}
+public static void main(String arg[]){
+JFrame frame = new JFrame("BasicJPanel");
+frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+frame.setSize(400,300);
+// Create a new identifier for a BasicJPanel called "panel",
+// then create a new BasicJPanel object for it to refer to.
+Main panel = new Main();
+// Make the panel object the content pane of the JFrame.
+// This puts it into the drawable area of frame, and now
+// we do all our drawing to panel, using paintComponent(), above.
+frame.setContentPane(panel);
+frame.setVisible(true);
+}
+
+    private Color Color(Color color) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+}
