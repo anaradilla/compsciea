@@ -1,0 +1,29 @@
+package com.mycompany.namedemo;
+
+/**
+ *
+ * @author aradilla2025
+ */
+public class NameDemo {
+
+    public static void main(String[] args) {
+         String name= new String ( "Ana Radilla");
+         System.out.println(name);//Printed my name 
+         
+        // Print Ana Radilla 
+        System.out.println("My name is \"" + name + "\"");     
+        // Print 'My name length is 10'
+        System.out.println("My name length is " + name.length());
+        // Print 'My name in upper case is "ANA RADILLA"'
+        System.out.println("My name in upper case is \"" + name.toUpperCase() + "\"");
+        // Print 'My name in lower case is "ana radilla"'
+        System.out.println("My name in lower case is \"" + name.toLowerCase() + "\"");
+        // Print 'The first letter in my name is "A"'
+        System.out.println("The first letter in my name is \"" + name.charAt(0) + "\"");
+        // Print 'The last letter in my name is "a"'
+        System.out.println("The last letter in my name is \"" + name.charAt(name.length() - 1) + "\"");
+        // Print "The index of the space between the names is 3"
+        System.out.println("The index of the space between the names is " + name.indexOf(" "));
+    
+    }
+}
