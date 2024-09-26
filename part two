@@ -1,0 +1,80 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.mavenproject8;
+
+import java.util.Random;
+import java.util.Scanner;
+
+/**
+ *
+ * @author aradilla2025
+ */
+
+// Part 1 - Phone Number Generator
+public class Mavenproject8 {
+
+    // Generate a random phone number in the format XXX-XXX-XXXX
+    public static String generatePhoneNumber() {
+        Random random = new Random(); 
+
+        // Generate the first part (first digit cannot be 8 or 9)
+        int firstDigit = random.nextInt(8); // Range 0-7
+        int secondDigit = random.nextInt(10); // Range 0-9
+        int thirdDigit = random.nextInt(10); // Range 0-9
+
+        // Ensure the first part does not contain 8 or 9
+        int firstPart = firstDigit * 100 + secondDigit * 10 + thirdDigit; // Combines the digits
+
+        // Generate the second part (must not exceed 655)
+        int secondPart = random.nextInt(656); // Range 0-655
+
+        // Generate the third part (four digits)
+        int thirdPart = random.nextInt(10000); // Range 0-9999
+
+        // Format the phone number with leading zeros
+        return String.format("%03d-%03d-%04d", firstPart, secondPart, thirdPart);
+    }
+
+    // Method to simulate rolling a 6-sided die
+    public static int rollDie() {
+        Random random = new Random();
+        return random.nextInt(6) + 1; // Generates a number between 1 and 6
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String userInput = "";
+
+        // Keep the program running until the user enters 'q' to quit
+        while (!userInput.equalsIgnoreCase("q")) {
+            // Prompt the user for input
+            System.out.println("Choose an option:");
+            System.out.println("Press 'p' to generate a phone number");
+            System.out.println("Press 'r' to roll a 6-sided die");
+            System.out.println("Press 'q' to quit");
+
+            // Read user input
+            userInput = scanner.nextLine();
+
+            // Generate a phone number if the user pressed 'p'
+            if (userInput.equalsIgnoreCase("p")) {
+                String phoneNumber = generatePhoneNumber();
+                System.out.println("Generated phone number: " + phoneNumber);
+
+            // Roll a 6-sided die if the user pressed 'r'
+            } else if (userInput.equalsIgnoreCase("r")) {
+                int dieRoll = rollDie();
+                System.out.println("You rolled a: " + dieRoll);
+
+            // If the user enters anything else (except 'q'), show an error message
+            } else if (!userInput.equalsIgnoreCase("q")) {
+                System.out.println("Invalid input, please try again.");
+            }
+        }
+
+        // Program ends when user presses 'q'
+        System.out.println("Program terminated.");
+    }
+}
