@@ -1,0 +1,69 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.mathclass;
+
+import java.util.Random;
+import java.util.Scanner;
+
+/**
+ *
+ * @author aradilla2025
+ */
+public class Mathclass {
+    public static void main(String[] args) {
+    //1 Generate a ranfom number 90 or lower, its sin,cos, tan and round 3 decimal places
+    Scanner scanner = new Scanner(System.in);
+    int randomAngle= (int)(Math.random()*91);
+    double sine= Math.sin(Math.toRadians(randomAngle));
+    double cosine= Math.cos(Math.toRadians(randomAngle));
+    double tangent= Math.tan(Math.toRadians(randomAngle));
+    System.out.printf("Number: %d Sine: %.3f Cosine: %.3f Tangent: %.3f%n", 
+            //from the Avoid packet out of the string 
+                          randomAngle, roundAvoid(sine, 3), roundAvoid(cosine, 3), roundAvoid(tangent, 3));
+    
+     //2 Generate a random real number for radius (1.0 to 20.0)
+    double radius = 1.0 + (Math.random() * 19.0);
+    double area = Math.PI * Math.pow(radius, 2);
+    double volume = (4.0 / 3.0) * Math.PI * Math.pow(radius, 3);
+    System.out.printf("Radius: %.3f Area: %.3f Volume: %.3f%n", 
+                      radius, roundAvoid(area, 3), roundAvoid(volume, 3));
+        
+      //3 Generate a random real number in range 100.0 to 100m
+      double largeValue = 100.0 + (Math.random() * 99999000.0);
+      double sqrtValue = Math.sqrt(largeValue);
+      double lnValue = Math.log(largeValue);
+      double log10Value = Math.log10(largeValue);
+        System.out.printf("Value: %.2f Square Root: %.5f Natural Log: %.5f Log10: %.5f%n", 
+                          largeValue, roundAvoid(sqrtValue, 5), roundAvoid(lnValue, 5), roundAvoid(log10Value, 5));
+        
+       //4 Calculate the mass in grams
+       double c = 299792458; 
+       double mass =largeValue / (c * c)*1000;
+       System.out.printf("Mass required: %.5f%n",
+               roundAvoid(mass,5));
+                
+      //5 take input for numbers
+      System.out.print("Enter a number:"); 
+      double realNumber = scanner.nextDouble();
+      
+      System.out.print("Enter an integer:");
+      int exponent = scanner.nextInt();
+      
+      System.out.print("Enter # decimals:");
+      int Decimalplaces = scanner.nextInt();
+      double result = Math.pow(realNumber, exponent);
+
+        // Output the result, rounded to the user-defined number of decimal places
+        System.out.printf("Result: %.3f raised to the power of %d is: %." + Decimalplaces + "f%n", 
+                realNumber, exponent, roundAvoid(result, Decimalplaces));           
+      
+    
+
+    }
+    public static double roundAvoid(double value, int places) {
+        double scale = Math.pow(10, places);
+        return Math.round(value * scale) / scale;
+    }
+}
