@@ -1,0 +1,73 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.schooldetails;
+
+/**
+ *
+ * @author aradilla2025
+ */
+import java.util.Scanner;
+import java.util.Random;
+import java.text.NumberFormat;
+import java.util.Locale;
+
+public class SchoolDetails {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();  // Create random object
+        
+        // Task 1: Calculate and display percentage of girls and boys in the school
+        System.out.print("Please enter the total number of students: ");
+        int totalStudents = scanner.nextInt();  // Get total number of students
+        
+        System.out.print("Please enter the number of girls: ");
+        int girls = scanner.nextInt();  // Get number of girls
+        
+        // Calculate percentages
+        double girlsPercent = ((double) girls / totalStudents) * 100;
+        double boysPercent = 100 - girlsPercent;  // Boys percentage is complementary
+        
+        // Format percentages
+        System.out.printf("Girls make up %.2f%% of the school.\n", girlsPercent);
+        System.out.printf("Boys make up %.2f%% of the school.\n", boysPercent);
+        
+        // Task 2: Convert an amount in USD to GBP
+        System.out.print("\nEnter the total amount of money in USD: ");
+        double usdAmount = scanner.nextDouble();  // Get the dollar amount
+        
+        // Conversion rate from USD to GBP
+        double exchangeRate = 0.83;  // 1 USD = 0.83 GBP
+        double gbpAmount = usdAmount * exchangeRate;  // Conversion
+        
+        // Format and display GBP amount
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.UK);
+        System.out.println("Converted amount in British Pounds (GBP) is: " + currencyFormat.format(gbpAmount));
+        System.out.println("(Exchange rate: 1 USD = 0.83 GBP)");
+        
+        // Task 3: Format Pi to a specific number of decimal places
+        System.out.print("\nEnter the number of decimal places for Pi (0 to 15): ");
+        int decimals = scanner.nextInt();  // Get the number of decimal places
+        
+        // Check if input is within valid range
+        if (decimals >= 0 && decimals <= 15) {
+            String piFormat = String.format("%." + decimals + "f", Math.PI);
+            System.out.println("Pi to " + decimals + " decimal places: " + piFormat);
+        } else {
+            System.out.println("Please enter a valid number between 0 and 15.");
+        }
+        
+        // Task 4: Generate a random large number
+        // Define the range
+        long min = 100_000_000L;
+        long max = 999_000_000L;
+
+        // Generate random number between min and max
+        long randomNumber = min + (long) (random.nextDouble() * (max - min));
+
+        System.out.println("\nRandom number: " + randomNumber);
+    }
+}
+
