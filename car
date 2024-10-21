@@ -1,0 +1,85 @@
+/*
+1) Class vs Object:
+   - Class: A blueprint for creating objects.
+   - Object: An instance of a class.
+
+2) Passing an object to println:
+   - Calls the object's toString() method to print a string representation.
+
+3) Scope:
+   - Method scope: Limited to the method where the variable is declared.
+   - Class scope: Accessible by all methods in the class.
+*/
+
+public class Main {
+
+    public static void main(String[] args) {
+        // Creating car objects with different types
+        Car vwBug = new Car("VW Bug", 150, 90.5, 20000);
+        Car toyotaPrius = new Car("Toyota Prius", 180, 112.0, 25000);
+        Car bmwI8 = new Car("BMW i8", 369, 155.0, 147500);
+        Car teslaModel3 = new Car("Tesla Model 3", 283, 162.0, 39999);
+
+        // Printing out the car details
+        System.out.println(vwBug);
+        System.out.println(toyotaPrius);
+        System.out.println(bmwI8);
+        System.out.println(teslaModel3);
+    }
+}
+
+// Car Class
+class Car {
+    // Instance variables
+    private String carBrand;
+    private int enginePower;   // in Horse Power (HP)
+    private double maxSpeed;   // in MPH (miles per hour)
+    private double price;      // in dollars
+
+    // Constructor to initialize the Car object
+    public Car(String carBrand, int enginePower, double maxSpeed, double price) {
+        this.carBrand = carBrand;
+        this.enginePower = enginePower;
+        this.maxSpeed = maxSpeed;
+        this.price = price;
+    }
+
+    // Getters and Setters
+    public String getCarBrand() {
+        return carBrand;
+    }
+
+    public void setCarBrand(String carBrand) {
+        this.carBrand = carBrand;
+    }
+
+    public int getEnginePower() {
+        return enginePower;
+    }
+
+    public void setEnginePower(int enginePower) {
+        this.enginePower = enginePower;
+    }
+
+    public double getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public void setMaxSpeed(double maxSpeed) {
+        this.maxSpeed = maxSpeed;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    // toString method to print the car details
+    @Override
+    public String toString() {
+        return "Car Brand: " + carBrand + ", Engine Power: " + enginePower + " HP, Max Speed: " + maxSpeed +
+               " MPH, Price:    }
+    }
