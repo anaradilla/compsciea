@@ -1,0 +1,102 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.mavenproject10;
+
+/**
+ *
+ * @author aradilla2025
+ */
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Mavenproject10 {
+
+    public static void main(String[] args) {
+        // Create a scanner object for user input
+        Scanner scanner = new Scanner(System.in);
+        
+        // Ask user for the financial amount
+        System.out.print("Enter the financial amount (ex. 1,000,000): ");
+        double amount = scanner.nextDouble();
+        
+        // Create an instance of PaymentSystem
+        PaymentSystem paymentSystem = new PaymentSystem();
+        
+        // Generate payment schedule
+        paymentSystem.processPaymentSchedule(amount, scanner);
+        
+        // Close the scanner
+        scanner.close();
+    }
+}
+
+// Black Box System to handle payment calculations and schedule
+class PaymentSystem {
+    
+    private InterestRateCalculator calculator = new InterestRateCalculator();
+
+    public void processPaymentSchedule(double amount, Scanner scanner) {
+        // Ask user for the number of months for repayment
+        System.out.print("Enter the number of months for repayment: ");
+        int months = scanner.nextInt();
+        
+        // Calculate the initial payment with interest
+        double initialPayment = calculator.calculateInitialPayment(amount, months);
+        
+        // Output the payment schedule
+        System.out.println("\nPayment Schedule:");
+        calculator.calculatePayments(amount, initialPayment, months);
+    }
+}
+
+// InterestRateCalculator handles the core logic
+class InterestRateCalculator {
+    public static final double RATE = 20; // Interest rate
+    private double remainingAmount;
+
+    // Calculate initial payment including interest
+    public double calculateInitialPayment(double amount, int months) {
+        // Divide the interest rate over 12 months
+        double monthlyInterestRate = RATE / 100 / 12;
+        
+        // Calculate monthly payment with interest (using the formula for monthly payments)
+        double monthlyPayment = (amount * monthlyInterestRate) / 
+                                (1 - Math.pow(1 + monthlyInterestRate, -months));
+        
+        remainingAmount = amount;
+        return monthlyPayment; // Return the fixed monthly payment with interest included
+    }
+
+    // Calculate and print payment schedule
+    public void calculatePayments(double amount, double monthlyPayment, int months) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        double totalPaid = 0;
+        double interestPaid;
+        double principalPaid;
+        
+        for (int month = 1; month <= months; month++) {
+            // Calculate interest on the remaining amount
+            interestPaid = remainingAmount * (RATE / 100 / 12);
+            
+            // Principal paid is the fixed monthly payment minus the interest
+            principalPaid = monthlyPayment - interestPaid;
+            
+            // Update the remaining amount
+            remainingAmount -= principalPaid;
+            
+            totalPaid += monthlyPayment;
+            
+            // Output the details
+            System.out.printf("Month %d: Payment = %s, Interest Paid = %s, Principal Paid = %s, Total Paid = %s%n", 
+                              month, 
+                              currencyFormat.format(monthlyPayment), 
+                              currencyFormat.format(interestPaid),
+                              currencyFormat.format(principalPaid), 
+                              currencyFormat.format(totalPaid));
+        }
+    }
+}
+
