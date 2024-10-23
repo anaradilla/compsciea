@@ -1,0 +1,83 @@
+
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Mavenproject10 {
+
+    public static void main(String[] args) {
+        // Create a scanner object for user input
+        Scanner scanner = new Scanner(System.in);
+        
+        // Ask user for the financial amount
+        System.out.print("Enter the financial amount (ex. 1,000,000): ");
+        double amount = scanner.nextDouble();
+        
+        // Create an instance of PaymentSystem
+        PaymentSystem paymentSystem = new PaymentSystem();
+        
+        // Generate payment schedule
+        paymentSystem.processPaymentSchedule(amount, scanner);
+        
+        // Close the scanner
+        scanner.close();
+    }
+}
+
+// Black Box System to handle payment calculations and schedule
+class PaymentSystem {
+    
+    private InterestRateCalculator calculator = new InterestRateCalculator();
+
+    public void processPaymentSchedule(double amount, Scanner scanner) {
+        // Calculate the initial payment with interest
+        double initialPayment = calculator.calculateInitialPayment(amount);
+        
+        // Ask user for the number of months for repayment
+        System.out.print("Enter the number of months for repayment: ");
+        int months = scanner.nextInt();
+        
+        // Output the payment schedule
+        System.out.println("\nPayment Schedule:");
+        calculator.calculatePayments(amount, initialPayment, months);
+    }
+}
+
+// InterestRateCalculator handles the core logic
+class InterestRateCalculator {
+    public static final double RATE = 20; // Interest rate
+    private double remainingAmount;
+    private double initialPayment;
+
+    // Calculate initial payment including interest
+    public double calculateInitialPayment(double amount) {
+        double interest = amount * (RATE / 100) / 12; // Monthly interest
+        initialPayment = amount / 12; // Divide amount by 12 months (for simplicity)
+        remainingAmount = amount + interest;
+        return initialPayment + interest;
+    }
+
+    // Calculate and print payment schedule
+    public void calculatePayments(double amount, double initialPayment, int months) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        double totalPaid = 0;
+        totalPaid += initialPayment;
+
+        System.out.printf("Month %d: Payment = %s, Total Paid = %s%n", 1, 
+                          currencyFormat.format(initialPayment), 
+                          currencyFormat.format(totalPaid));
+
+        for (int month = 2; month <= months; month++) {
+            double interest = remainingAmount * (RATE / 100) / 12; 
+            double monthlyPayment = initialPayment + interest;
+            totalPaid += monthlyPayment;
+
+            System.out.printf("Month %d: Payment = %s, Total Paid = %s%n", month, 
+                              currencyFormat.format(monthlyPayment), 
+                              currencyFormat.format(totalPaid));
+            
+            remainingAmount -= initialPayment;
+        }
+    }
+}
+
