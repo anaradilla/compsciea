@@ -1,0 +1,107 @@
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Mavenproject10 {
+
+    public static void main(String[] args) {
+        // Create a scanner object for user input
+        Scanner scanner = new Scanner(System.in);
+        
+        // Ask user for the financial amount
+        System.out.print("Enter the financial amount (ex. 1,000,000): ");
+        double amount = scanner.nextDouble();
+        
+        // Create an instance of PaymentSystem
+        PaymentSystem paymentSystem = new PaymentSystem();
+        
+        // Generate payment schedule
+        paymentSystem.processPaymentSchedule(amount, scanner);
+        
+        // Close the scanner
+        scanner.close();
+    }
+}
+
+class PaymentSystem {
+    
+    private InterestRateCalculator calculator = new InterestRateCalculator();
+
+    public void processPaymentSchedule(double amount, Scanner scanner) {
+        // Ask user for the number of months for repayment
+        System.out.print("Enter the number of months for repayment: ");
+        int months = scanner.nextInt();
+        
+        // Calculate the initial payment with interest
+        double initialPayment = calculator.calculateInitialPayment(amount, months);
+        
+        // Get the payment details for output
+        double[][] paymentDetails = calculator.calculatePayments(amount, initialPayment, months);
+        
+        // Print the payment details in the main method
+        printPaymentSchedule(paymentDetails, initialPayment, months);
+    }
+
+    private void printPaymentSchedule(double[][] paymentDetails, double monthlyPayment, int months) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        double totalPaid = 0;
+        
+        System.out.println("\nPayment Schedule:");
+        
+        for (int month = 0; month < months; month++) {
+            double interestPaid = paymentDetails[month][0];
+            double principalPaid = paymentDetails[month][1];
+            totalPaid += monthlyPayment;
+            
+            // Output the details
+            System.out.printf("Month %d: Payment = %s, Interest Paid = %s, Principal Paid = %s, Total Paid = %s%n", 
+                              month + 1, 
+                              currencyFormat.format(monthlyPayment), 
+                              currencyFormat.format(interestPaid),
+                              currencyFormat.format(principalPaid), 
+                              currencyFormat.format(totalPaid));
+        }
+    }
+}
+
+// InterestRateCalculator handles the core logic
+class InterestRateCalculator {
+    public static final double RATE = 20; // Interest rate
+
+    // Calculate initial payment including interest
+    public double calculateInitialPayment(double amount, int months) {
+        // Divide the interest rate over 12 months
+        double monthlyInterestRate = RATE / 100 / 12;
+        
+        // Calculate monthly payment with interest (using the formula for monthly payments)
+        double monthlyPayment = (amount * monthlyInterestRate) / 
+                                (1 - Math.pow(1 + monthlyInterestRate, -months));
+        
+        return monthlyPayment; // Return the fixed monthly payment with interest included
+    }
+
+    // Calculate and return payment details for each month
+    public double[][] calculatePayments(double amount, double monthlyPayment, int months) {
+        double[][] paymentDetails = new double[months][2]; // 2 columns for interest and principal
+        double remainingAmount = amount;
+
+        for (int month = 0; month < months; month++) {
+            // Calculate interest on the remaining amount
+            double interestPaid = remainingAmount * (RATE / 100 / 12);
+            
+            // Principal paid is the fixed monthly payment minus the interest
+            double principalPaid = monthlyPayment - interestPaid;
+            
+            // Update the remaining amount
+            remainingAmount -= principalPaid;
+            
+            // Store the interest and principal in the array
+            paymentDetails[month][0] = interestPaid;
+            paymentDetails[month][1] = principalPaid;
+        }
+        
+        return paymentDetails; // Return the array with payment details
+    }
+}
+
+
