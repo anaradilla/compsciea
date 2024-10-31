@@ -1,0 +1,84 @@
+public class CourseDetails {
+    public static void main(String[] args) {
+        // Create a course using the full constructor
+        Course course1 = new Course("Computer Science", "CS101", 100, "Mr. Nelson");
+
+        // Create a course using the title-only constructor, then set other details using setters
+        Course course2 = new Course("Physics");
+        course2.setCourseCode("APPHYSICS");
+        course2.setPointsTotal(90);
+        course2.setInstructorName("Mrs. Rafie");
+
+        // Create another course using the full constructor
+        Course course3 = new Course("Mathematics", "MTH301", 85, "Mr. Leaderman");
+
+        // Print out each course using the toString method
+        System.out.println(course1);
+        System.out.println(course2);
+        System.out.println(course3);
+    }
+}
+
+class Course {
+    // Instance variables
+    private String courseTitle;
+    private String courseCode;
+    private int pointsTotal;
+    private String instructorName;
+
+    // Constructor with all parameters
+    public Course(String courseTitle, String courseCode, int pointsTotal, String instructorName) {
+        this.courseTitle = courseTitle;
+        this.courseCode = courseCode;
+        this.pointsTotal = pointsTotal;
+        this.instructorName = instructorName;
+    }
+
+    // Constructor with course title only
+    public Course(String courseTitle) {
+        this.courseTitle = courseTitle;
+    }
+
+    // Accessor (getter) methods
+    public String getCourseTitle() {
+        return courseTitle;
+    }
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public int getPointsTotal() {
+        return pointsTotal;
+    }
+
+    public String getInstructorName() {
+        return instructorName;
+    }
+
+    // Mutator (setter) methods
+    public void setCourseTitle(String courseTitle) {
+        this.courseTitle = courseTitle;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
+
+    public void setPointsTotal(int pointsTotal) {
+        this.pointsTotal = pointsTotal;
+    }
+
+    public void setInstructorName(String instructorName) {
+        this.instructorName = instructorName;
+    }
+
+    // toString method
+    @Override
+    public String toString() {
+        return "Course Title: " + courseTitle + "\n" +
+               "Course Code: " + courseCode + "\n" +
+               "Points Total: " + pointsTotal + "\n" +
+               "Instructor: " + instructorName + "\n";
+    }
+}
