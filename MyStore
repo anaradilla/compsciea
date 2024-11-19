@@ -1,0 +1,115 @@
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class MyStore {
+    public static void main(String[] args) {
+        // Constant variable for the maximum budget
+        final double MAX_BUDGET = 250.00;
+
+        // Create a list of store items
+        ArrayList<Item> storeItems = new ArrayList<>();
+
+        // Add items to the store
+        storeItems.add(new Item("T Shirt", 29.99));
+        storeItems.add(new Item("Shoes", 125.99));
+        storeItems.add(new Item("Jeans", 60.99));
+        storeItems.add(new Item("Jacket", 250.00));
+        storeItems.add(new Item("Hat", 25.99));
+        storeItems.add(new Item("Shorts", 75.99));
+        storeItems.add(new Item("Blouse", 88.99));
+
+        try (Scanner scanner = new Scanner(System.in)) {
+            double totalSpent = 0.0;
+            int itemCount = 0;
+            
+            // Display available items
+            System.out.println("Welcome to MyStore! Below are the available items:");
+            for (Item item : storeItems) {
+                System.out.printf("- %s: $%.2f\n", item.getName(), item.getPrice());
+            }
+            System.out.println("\nYou have a budget of $250.00. Start shopping!");
+            
+            while (true) {
+                System.out.print("Enter an item name (or type 'exit' to finish): ");
+                String input = scanner.nextLine();
+                
+                if (input.equalsIgnoreCase("exit")) {
+                    break;
+                }
+                
+                // Find the item in the store
+                Item selectedItem = findItemByName(storeItems, input);
+                
+                if (selectedItem != null) {
+                    double itemPrice = selectedItem.getPrice();
+                    
+                    // Check if adding this item exceeds the budget
+                    if (totalSpent + itemPrice > MAX_BUDGET) {
+                        System.out.printf("Cannot add %s ($%.2f). It exceeds your budget of $250.00.\n", input, itemPrice);
+                    } else {
+                        // Add item to the cart
+                        totalSpent += itemPrice;
+                        itemCount++;
+                        System.out.printf("Added %s to your cart for $%.2f.\n", input, itemPrice);
+                    }
+                } else {
+                    System.out.println("Item not found. Please enter a valid item name.");
+                }
+                
+                // Display current count and total spent
+                System.out.printf("Items in cart: %d, Total spent: $%.2f\n", itemCount, totalSpent);
+            }
+            
+            // Final summary
+            System.out.println("\nThank you for shopping at MyStore!");
+            System.out.printf("You purchased %d items, spending a total of $%.2f.\n", itemCount, totalSpent);
+        }
+    }
+
+    // Helper method to find an item by name
+    private static Item findItemByName(ArrayList<Item> storeItems, String name) {
+        for (Item item : storeItems) {
+            if (item.getName().equalsIgnoreCase(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+}
+
+// Item class
+class Item {
+    private final String name;
+    private double dblPrice;
+    public final double TOLERANCE = 0.01;
+
+    // Constructor
+    public Item(String name, double price) {
+        this.name = name;
+        this.dblPrice = price;
+    }
+
+    // Getters
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return dblPrice;
+    }
+
+    // Setters
+    public void setPrice(double inPrice) {
+        dblPrice = inPrice;
+    }
+
+    // Equals method to compare prices
+    public boolean equals(Item inItem) {
+        return Math.abs(inItem.dblPrice - this.dblPrice) <= TOLERANCE;
+    }
+
+
+}
+
+
