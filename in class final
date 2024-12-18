@@ -1,0 +1,109 @@
+
+/**
+ *
+ * @author aradilla2025
+ */
+//import all classes needed 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+
+public class Unit4Test {
+
+    // Inner class to represent a playing card
+    static class Card {
+        String suit;
+        String rank;
+
+        // Constructor to set the suit and rank of the card
+        Card(String suit, String rank) {
+            this.suit = suit;
+            this.rank = rank;
+        }
+
+        // Method to get the numerical value of the card
+        int getValue() {
+            switch (rank) {
+                case "Jack":
+                    return 11;
+                case "Queen":
+                    return 12;
+                case "King":
+                    return 13;
+                case "Ace":
+                    return 14;
+                default:
+                    return Integer.parseInt(rank);
+            }
+        }
+
+        // Method to return a friendly name for the card
+        public String toString() {
+            return rank + " of " + suit;
+        }
+    }
+
+    // Arrays to hold the possible suits and ranks
+    String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+    String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10",
+                     "Jack", "Queen", "King", "Ace"};
+
+    // List to hold all the cards in the deck
+    ArrayList<Card> deck = new ArrayList<Card>();
+
+    // List to hold the cards drawn as a hand
+    ArrayList<Card> hand = new ArrayList<Card>();
+
+    // Method to create a standard deck of 52 cards
+    void createDeck() {
+        for (int i = 0; i < suits.length; i++) {
+            for (int j = 0; j < ranks.length; j++) {
+                deck.add(new Card(suits[i], ranks[j]));
+            }
+        }
+    }
+
+    // Method to shuffle the deck randomly
+    void shuffleDeck() {
+        Collections.shuffle(deck, new Random());
+    }
+
+    // Method to draw 5 unique cards from the deck
+    void drawHand() {
+        for (int i = 0; i < 5; i++) {
+            // Remove the top card from the deck and add it to the hand
+            Card drawn = deck.remove(0);
+            hand.add(drawn);
+        }
+    }
+
+    // Method to print out the cards in the hand
+    void printHand() {
+        System.out.println("Your hand:");
+        for (int i = 0; i < hand.size(); i++) {
+            System.out.println("Card " + (i+1) + ": " + hand.get(i));
+        }
+    }
+
+    // Method to find and print the highest value card in the hand
+    void findHighestCard() {
+        Card highest = hand.get(0); // Assume first card is the highest initially
+        for (int i = 1; i < hand.size(); i++) {
+            if (hand.get(i).getValue() > highest.getValue()) {
+                highest = hand.get(i); // Found a new highest card
+            }
+        }
+        System.out.println("\nHighest value card: " + highest);
+    }
+
+    // Main method to run the program
+    public static void main(String[] args) {
+        Unit4Test game = new Unit4Test(); // Create an instance of the game
+        game.createDeck();                  // Build the deck
+        game.shuffleDeck();                 // Shuffle it up
+        game.drawHand();                    // Draw 5 cards
+        game.printHand();                   // Show the hand
+        game.findHighestCard();             // Find and show the highest card
+    }
+}
+
