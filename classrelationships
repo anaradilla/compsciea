@@ -1,0 +1,89 @@
+package com.mycompany.interfaces;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+// Priority Interface
+interface Priority {
+    void setPriority(int priority);
+    int getPriority();
+}
+
+// Complexity Interface
+interface Complexity {
+    void setComplexity(int complexity);
+    int getComplexity();
+}
+
+// Task Class
+class Task implements Priority, Complexity, Comparable<Task> {
+    private String name;
+    private int priority;
+    private int complexity;
+
+    // Constructor
+    public Task(String name, int priority, int complexity) {
+        this.name = name;
+        this.priority = priority;
+        this.complexity = complexity;
+    }
+
+    // Implement Priority methods
+    @Override
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    @Override
+    public int getPriority() {
+        return priority;
+    }
+
+    // Implement Complexity methods
+    @Override
+    public void setComplexity(int complexity) {
+        this.complexity = complexity;
+    }
+
+    @Override
+    public int getComplexity() {
+        return complexity;
+    }
+
+    // Compare by priority first, then complexity
+    @Override
+    public int compareTo(Task other) {
+        if (this.priority != other.priority) {
+            return this.priority - other.priority;
+        }
+        return this.complexity - other.complexity;
+    }
+
+    // String representation for display
+    @Override
+    public String toString() {
+        return "Task: " + name + ", Priority: " + priority + ", Complexity: " + complexity;
+    }
+}
+
+// Main Class
+public class Interfaces {
+    public static void main(String[] args) {
+        // Create tasks
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(new Task("Finish Homework", 1, 5));
+        tasks.add(new Task("Clean Room", 2, 3));
+        tasks.add(new Task("Prepare for Meeting", 1, 7));
+        tasks.add(new Task("Buy Groceries", 3, 2));
+
+        // Sort tasks by priority and complexity
+        Collections.sort(tasks);
+
+        // Print tasks
+        System.out.println("Tasks sorted by Priority and Complexity:");
+        for (Task task : tasks) {
+            System.out.println(task);
+        }
+    }
+}
