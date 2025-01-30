@@ -1,0 +1,39 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Arraylist {
+    public static void main(String[] args) {
+        ArrayList<String> weekDays = new ArrayList<>();
+        weekDays.add("Monday");
+        weekDays.add("Tuesday");
+        weekDays.add("Wednesday");
+        weekDays.add("Thursday");
+        weekDays.add("Friday");
+        weekDays.add("Saturday");
+        weekDays.add("Sunday");
+
+        // Print all days of the week, one per row
+        System.out.println("All Days of the Week:");
+        for (String day : weekDays) {
+            System.out.println(day);
+        }
+
+        // Resize the ArrayList to contain only weekdays (Monday to Friday)
+        weekDays.subList(5, 7).clear();
+
+        // Print weekdays after resizing the ArrayList, one per row
+        System.out.println("\nWeekdays (Monday to Friday):");
+        for (String day : weekDays) {
+            System.out.println(day);
+        }
+
+        // Bonus
+        Collections.shuffle(weekDays);
+
+        // Print the shuffled weekdays
+        System.out.println("\nShuffled Weekdays:");
+        for (String day : weekDays) {
+            System.out.println(day);
+        }
+    }
+}
