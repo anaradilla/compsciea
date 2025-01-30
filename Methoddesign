@@ -1,0 +1,314 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// Course Class
+class Course {
+    private String courseName;
+    private int testScore;
+
+    // Default Constructor
+    public Course() {
+        this.courseName = "Unnamed Course";
+        this.testScore = 0;
+    }
+
+    // Parameterized Constructor
+    public Course(String courseName) {
+        this.courseName = courseName;
+        this.testScore = 0;
+    }
+
+    // Setters and Getters
+    public void setTestScore(int score) {
+        if (score >= 0 && score <= 100) {
+            this.testScore = score;
+        } else {
+            System.out.println("Score must be between 0 and 100.");
+        }
+    }
+
+    public int getTestScore() {
+        return testScore;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    @Override
+    public String toString() {
+        return courseName + " (Score: " + testScore + ")";
+    }
+}
+
+// Student Class
+class Student {
+    private String studentName;
+    private int studentId;
+    private List<Course> courseList;
+
+    // Default Constructor
+    public Student() {
+        this.studentName = "Unknown";
+        this.studentId = 0;
+        this.courseList = new ArrayList<>();
+        courseList.add(new Course("Math"));
+        courseList.add(new Course("Science"));
+        courseList.add(new Course("English"));
+    }
+
+    // Parameterized Constructor
+    public Student(String studentName, int studentId, List<String> courses) {
+        this.studentName = studentName;
+        this.studentId = studentId;
+        this.courseList = new ArrayList<>();
+        for (String courseName : courses) {
+            courseList.add(new Course(courseName));
+        }
+    }
+
+    // Set Test Score for a Specific Course
+    public void setTestScore(int courseIndex, int score) {
+        if (courseIndex >= 0 && courseIndex < courseList.size()) {
+            courseList.get(courseIndex).setTestScore(score);
+        } else {
+            System.out.println("Invalid course index.");
+        }
+    }
+
+    // Get Test Score for a Specific Course
+    public int getTestScore(int courseIndex) {
+        if (courseIndex >= 0 && courseIndex < courseList.size()) {
+            return courseList.get(courseIndex).getTestScore();
+        }
+        System.out.println("Invalid course index.");
+        return -1;
+    }
+
+    // Calculate Average Test Score
+    public double calculateAverageScore() {
+        if (courseList.isEmpty()) return 0.0;
+        int total = 0;
+        for (Course course : courseList) {
+            total += course.getTestScore();
+        }
+        return (double) total / courseList.size();
+    }
+
+    // Getters
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public List<Course> getCourseList() {
+        return courseList;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder courseDetails = new StringBuilder();
+        for (Course course : courseList) {
+            courseDetails.append(course.toString()).append(", ");
+        }
+        // Remove trailing comma and space
+        if (courseDetails.length() > 0) {
+            courseDetails.setLength(courseDetails.length() - 2);
+        }
+
+        return "Student Name: " + studentName +
+               "\nID: " + studentId +
+               "\nCourses: " + courseDetails.toString() +
+               "\nAverage Score: " + String.format("%.2f", calculateAverageScore());
+    }
+}
+
+// Student Driver Class
+public class StudentManagementSystem {
+    private static Scanner scanner = new Scanner(System.in);
+    private static List<Student> studentDatabase = new ArrayList<>();
+
+    public static void main(String[] args) {
+        System.out.println("Welcome to the Student Management System!");
+
+        boolean running = true;
+        while (running) {
+            displayMenu();
+            int option = getUserChoice();
+
+            switch (option) {
+                case 1:
+                    addNewStudent();
+                    break;
+                case 2:
+                    updateTestScore();
+                    break;
+                case 3:
+                    retrieveTestScore();
+                    break;
+                case 4:
+                    displayAllStudents();
+                    break;
+                case 5:
+                    running = false;
+                    System.out.println("Exiting the system. Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid selection. Please choose a valid option.");
+            }
+        }
+        scanner.close();
+    }
+
+    // Display Menu Options
+    private static void displayMenu() {
+        System.out.println("\n--- Menu ---");
+        System.out.println("1. Add New Student");
+        System.out.println("2. Update Test Score");
+        System.out.println("3. Retrieve Test Score");
+        System.out.println("4. Display All Students");
+        System.out.println("5. Exit");
+        System.out.print("Please select an option (1-5): ");
+    }
+
+    // Get User Choice with Validation
+    private static int getUserChoice() {
+        while (!scanner.hasNextInt()) {
+            System.out.print("Invalid input. Please enter a number between 1 and 5: ");
+            scanner.next();
+        }
+        return scanner.nextInt();
+    }
+
+    // Add a New Student
+    private static void addNewStudent() {
+        scanner.nextLine(); // Consume newline
+        System.out.print("Enter student name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter student ID: ");
+        while (!scanner.hasNextInt()) {
+            System.out.print("Invalid ID. Please enter a numeric ID: ");
+            scanner.next();
+        }
+        int id = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        List<String> courses = new ArrayList<>();
+        for (int i = 1; i <= 3; i++) {
+            System.out.print("Enter name for course " + i + ": ");
+            String courseName = scanner.nextLine();
+            courses.add(courseName);
+        }
+
+        Student newStudent = new Student(name, id, courses);
+        studentDatabase.add(newStudent);
+        System.out.println("Student added successfully!");
+    }
+
+    // Update a Student's Test Score
+    private static void updateTestScore() {
+        System.out.print("Enter student ID: ");
+        int id = getValidInteger();
+
+        Student student = findStudentById(id);
+        if (student == null) {
+            System.out.println("Student with ID " + id + " not found.");
+            return;
+        }
+
+        List<Course> courses = student.getCourseList();
+        displayCourses(courses);
+
+        System.out.print("Select course index to update score (1-" + courses.size() + "): ");
+        int courseChoice = getValidInteger() - 1;
+
+        if (courseChoice < 0 || courseChoice >= courses.size()) {
+            System.out.println("Invalid course selection.");
+            return;
+        }
+
+        System.out.print("Enter new test score (0-100): ");
+        int score = getValidInteger();
+        if (score < 0 || score > 100) {
+            System.out.println("Score must be between 0 and 100.");
+            return;
+        }
+
+        student.setTestScore(courseChoice, score);
+        System.out.println("Test score updated successfully!");
+    }
+
+    // Retrieve a Student's Test Score
+    private static void retrieveTestScore() {
+        System.out.print("Enter student ID: ");
+        int id = getValidInteger();
+
+        Student student = findStudentById(id);
+        if (student == null) {
+            System.out.println("Student with ID " + id + " not found.");
+            return;
+        }
+
+        List<Course> courses = student.getCourseList();
+        displayCourses(courses);
+
+        System.out.print("Select course index to retrieve score (1-" + courses.size() + "): ");
+        int courseChoice = getValidInteger() - 1;
+
+        if (courseChoice < 0 || courseChoice >= courses.size()) {
+            System.out.println("Invalid course selection.");
+            return;
+        }
+
+        int score = student.getTestScore(courseChoice);
+        if (score != -1) {
+            System.out.println("Test Score for " + courses.get(courseChoice).getCourseName() + ": " + score);
+        }
+    }
+
+    // Display All Students
+    private static void displayAllStudents() {
+        if (studentDatabase.isEmpty()) {
+            System.out.println("No students available to display.");
+            return;
+        }
+
+        for (Student student : studentDatabase) {
+            System.out.println("\n" + student);
+            System.out.println("----------------------------");
+        }
+    }
+
+    // Find a Student by ID
+    private static Student findStudentById(int id) {
+        for (Student student : studentDatabase) {
+            if (student.getStudentId() == id) {
+                return student;
+            }
+        }
+        return null;
+    }
+
+    // Display Courses with Indices
+    private static void displayCourses(List<Course> courses) {
+        System.out.println("Courses:");
+        for (int i = 0; i < courses.size(); i++) {
+            System.out.println((i + 1) + ". " + courses.get(i).getCourseName());
+        }
+    }
+
+    // Get a Valid Integer from User
+    private static int getValidInteger() {
+        while (!scanner.hasNextInt()) {
+            System.out.print("Invalid input. Please enter a valid number: ");
+            scanner.next();
+        }
+        return scanner.nextInt();
+    }
+}
+
