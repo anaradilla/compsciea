@@ -1,0 +1,42 @@
+import java.util.Random;
+
+public class WeekDaysArray {
+    public static void main(String[] args) {
+        String[] weekDays = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+
+        // Print all days of the week, one per row
+        System.out.println("All Days of the Week:");
+        for (String day : weekDays) {
+            System.out.println(day);
+        }
+
+        String[] weekdaysOnly = new String[5];
+        System.arraycopy(weekDays, 0, weekdaysOnly, 0, 5);
+
+        // Print weekdays after resizing
+        System.out.println("\nWeekdays (Monday to Friday):");
+        for (String day : weekdaysOnly) {
+            System.out.println(day);
+        }
+
+        // Shuffle the weekdays
+        shuffleArray(weekdaysOnly);
+
+        // Print shuffled weekdays
+        System.out.println("\nShuffled Weekdays:");
+        for (String day : weekdaysOnly) {
+            System.out.println(day);
+        }
+    }
+
+    // Method to shuffle an array
+    private static void shuffleArray(String[] array) {
+        Random rand = new Random();
+        for (int i = array.length - 1; i > 0; i--) {
+            int j = rand.nextInt(i + 1);
+            String temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
+}
