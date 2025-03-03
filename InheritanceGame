@@ -1,0 +1,259 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
+
+public class InheritanceGame {
+
+    // ========================
+    // ABSTRACT CHARACTER CLASS
+    // ========================
+    abstract static class Character {
+        protected String name;
+        protected int health;
+
+        public Character(String name, int health) {
+            this.name = name;
+            this.health = health;
+        }
+
+        public abstract void attack(Character target);
+
+        public void takeDamage(int damage) {
+            health -= damage;
+            System.out.println(name + " takes " + damage + " damage. Health: " + health);
+        }
+
+        public boolean isAlive() {
+            return health > 0;
+        }
+    }
+
+    // ========================
+    // PLAYER CLASSES
+    // ========================
+    static class Player extends Character {
+        protected List<Item> inventory;
+
+        public Player(String name) {
+            super(name, 100);
+            inventory = new ArrayList<>();
+        }
+
+        @Override
+        public void attack(Character target) {
+            System.out.println(name + " hits " + target.name + " with a weapon!");
+            target.takeDamage(10);
+        }
+
+        public void searchForItems() {
+            System.out.println(name + " searches for items...");
+        }
+
+        public void buildShelter() {
+            System.out.println(name + " builds a shelter...");
+        }
+    }
+
+    static class Brawler extends Player {
+        public Brawler(String name) {
+            super(name);
+        }
+
+        @Override
+        public void attack(Character target) {
+            System.out.println(name + " smashes " + target.name + " with brute force!");
+            target.takeDamage(20);
+        }
+    }
+
+    static class Scout extends Player {
+        public Scout(String name) {
+            super(name);
+        }
+
+        @Override
+        public void attack(Character target) {
+            System.out.println(name + " swiftly attacks " + target.name + "!");
+            target.takeDamage(10);
+        }
+
+        public void dodge() {
+            System.out.println(name + " dodges the attack!");
+        }
+    }
+
+    static class Healer extends Player {
+        public Healer(String name) {
+            super(name);
+        }
+
+        @Override
+        public void attack(Character target) {
+            System.out.println(name + " carefully strikes " + target.name + "!");
+            target.takeDamage(10);
+        }
+
+        public void heal() {
+            health += 15;
+            System.out.println(name + " heals for 15 health. Current health: " + health);
+        }
+    }
+
+    // ========================
+    // MUTANT CLASSES
+    // ========================
+    static class Mutant extends Character {
+        public Mutant(String name) {
+            super(name, 60);
+        }
+
+        @Override
+        public void attack(Character target) {
+            System.out.println(name + " bites " + target.name + "!");
+            target.takeDamage(8);
+        }
+    }
+
+    static class Charger extends Mutant {
+        public Charger(String name) {
+            super(name);
+        }
+
+        @Override
+        public void attack(Character target) {
+            System.out.println(name + " charges into " + target.name + " with full force!");
+            target.takeDamage(15);
+        }
+    }
+
+    // ========================
+    // ITEM CLASS
+    // ========================
+    static class Item {
+        private String itemName;
+        private String effect;
+
+        public Item(String itemName, String effect) {
+            this.itemName = itemName;
+            this.effect = effect;
+        }
+
+        public void useItem(Character target) {
+            System.out.println("Using " + itemName + " on " + target.name + ". Effect: " + effect);
+        }
+    }
+
+    // ========================
+    // MAIN METHOD - INTERACTIVE GAMEPLAY
+    // ========================
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+
+        System.out.println("Welcome to the Inheritance Survival Game!");
+
+        int choice;
+        while (true) {
+            try {
+                System.out.println("Choose your survivor type:");
+                System.out.println("1. Basic Survivor");
+                System.out.println("2. Brawler (Stronger attacks)");
+                System.out.println("3. Scout (Fast, can dodge)");
+                System.out.println("4. Healer (Can heal)");
+                System.out.print("Enter your choice (1-4): ");
+                choice = scanner.nextInt();
+                
+                if (choice >= 1 && choice <= 4) {
+                    break; // Valid input, exit loop
+                } else {
+                    System.out.println("Invalid choice! Please enter a number between 1 and 4.");
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid input! Please enter a valid number.");
+                scanner.next(); // Clear the invalid input
+            }
+        }
+
+        Player player;
+        switch (choice) {
+            case 2 -> player = new Brawler("Brawler Survivor");
+            case 3 -> player = new Scout("Scout Survivor");
+            case 4 -> player = new Healer("Healer Survivor");
+            default -> player = new Player("Basic Survivor");
+        }
+
+        System.out.println("\nA wild Mutant appears!");
+        Mutant mutant = new Mutant("Mutant Scavenger");
+
+        // First battle sequence
+        battleLoop(scanner, random, player, mutant);
+
+        if (!player.isAlive()) {
+            System.out.println("\nYou died... The mutants overran you.");
+            return;
+        }
+
+        System.out.println("\nA stronger Charger Mutant appears!");
+        Charger charger = new Charger("Charger Mutant");
+
+        // Second battle sequence
+        battleLoop(scanner, random, player, charger);
+
+        if (player.isAlive()) {
+            System.out.println("\nYou survived the mutant attacks! Victory!");
+        } else {
+            System.out.println("\nYou died... The mutants took over.");
+        }
+    }
+
+    // ========================
+    // BATTLE LOOP METHOD
+    // ========================
+    private static void battleLoop(Scanner scanner, Random random, Player player, Character enemy) {
+        while (player.isAlive() && enemy.isAlive()) {
+            int action = -1;
+            while (true) {
+                try {
+                    System.out.println("\nWhat will you do?");
+                    System.out.println("1. Attack");
+                    if (player instanceof Healer) {
+                        System.out.println("2. Heal");
+                    }
+                    if (player instanceof Scout) {
+                        System.out.println("3. Dodge");
+                    }
+                    System.out.print("Choose an action: ");
+                    action = scanner.nextInt();
+                    
+                    if (action == 1 || (action == 2 && player instanceof Healer) || (action == 3 && player instanceof Scout)) {
+                        break; // Valid input
+                    } else {
+                        System.out.println("Invalid choice! Please enter a valid number.");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Invalid input! Please enter a valid number.");
+                    scanner.next(); // Clear the invalid input
+                }
+            }
+
+            if (action == 1) {
+                player.attack(enemy);
+            } else if (action == 2 && player instanceof Healer) {
+                ((Healer) player).heal();
+            } else if (action == 3 && player instanceof Scout) {
+                ((Scout) player).dodge();
+                continue; // Skip enemy attack if dodged
+            }
+
+            if (enemy.isAlive()) {
+                int enemyAction = random.nextInt(2);
+                if (enemyAction == 0) {
+                    enemy.attack(player);
+                } else {
+                    System.out.println(enemy.name + " hesitates...");
+                }
+            }
+        }
+    }
+}
