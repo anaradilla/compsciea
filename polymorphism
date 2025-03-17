@@ -1,0 +1,66 @@
+package com.mycompany.poly;
+
+import java.util.ArrayList;
+
+// Base Class
+class Aircraft {
+    protected String type;
+
+    public Aircraft() {
+        this.type = "Aircraft with wings";
+    }
+
+    public String getDescription() {
+        return "Type: " + type;
+    }
+}
+
+// Child Class of Aircraft
+class SingleEnginePlane extends Aircraft {
+    protected String engineType;
+
+    public SingleEnginePlane() {
+        super();
+        this.type = "Single Engine Plane";
+        this.engineType = "Rotary Engine";
+    }
+
+    @Override
+    public String getDescription() {
+        return super.getDescription() + ", Engine: " + engineType;
+    }
+}
+
+// Child Class of SingleEnginePlane
+class Helicopter extends SingleEnginePlane {
+    private String bladeType;
+
+    public Helicopter() {
+        super();
+        this.type = "Helicopter";
+        this.bladeType = "Rotating Helicopter Blades";
+    }
+
+    @Override
+    public String getDescription() {
+        return super.getDescription() + ", Blades: " + bladeType;
+    }
+}
+
+// Main Class (Must Match File Name)
+public class Poly {
+    public static void main(String[] args) {
+        // Creating an ArrayList of Aircraft type
+        ArrayList<Aircraft> aircraftList = new ArrayList<>();
+
+        // Adding objects of each type
+        aircraftList.add(new Aircraft());
+        aircraftList.add(new SingleEnginePlane());
+        aircraftList.add(new Helicopter());
+
+        // Printing each object
+        for (Aircraft aircraft : aircraftList) {
+            System.out.println(aircraft.getDescription());
+        }
+    }
+} 
