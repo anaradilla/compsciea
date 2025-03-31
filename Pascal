@@ -1,0 +1,37 @@
+import java.util.Scanner;
+
+public class PascalsTriangleRecursive {
+
+    // Recursive function to calculate individual elements of Pascal's Triangle
+    public static int getPascalValue(int row, int col) {
+        if (col == 0 || col == row) {
+            return 1; // Edges of the triangle are always 1
+        }
+        // Sum of the two values above
+        return getPascalValue(row - 1, col - 1) + getPascalValue(row - 1, col);
+    }
+
+    // Function to return the nth row as an array
+    public static int[] getNthRow(int n) {
+        int[] row = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
+            row[i] = getPascalValue(n, i);
+        }
+        return row;
+    }
+
+    // Main method
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the line number N (0-indexed) of Pascal's Triangle: ");
+        int n = scanner.nextInt();
+
+        int[] nthRow = getNthRow(n);
+
+        System.out.println("Pascal’s Triangle Row " + n + ":");
+        for (int num : nthRow) {
+            System.out.print(num + " ");
+        }
+        System.out.println();
+    }
+}
