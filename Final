@@ -1,0 +1,174 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+public class AbsenceReportingSystem extends JFrame {
+    private JTextField studentNameField;
+    private JSpinner dateSpinner;
+    private JTextArea reasonArea, outputArea;
+    private ArrayList<AbsenceReport> reports = new ArrayList<>();
+    private final String FILE_NAME = "absences.csv";
+    private final Font customFont = new Font("SansSerif", Font.PLAIN, 14);
+    private final Color gold = new Color(255, 215, 0);
+    private final Color red = new Color(178, 34, 34);
+
+    public AbsenceReportingSystem() {
+        setTitle("Parent Absence Reporting System");
+        setSize(650, 600);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        getContentPane().setBackground(Color.WHITE);
+
+        add(createLabel("Student Name:"));
+        studentNameField = createTextField(20);
+        add(studentNameField);
+
+        add(createLabel("Select Date:"));
+        dateSpinner = new JSpinner(new SpinnerDateModel());
+        JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateSpinner, "yyyy-MM-dd");
+        dateSpinner.setEditor(dateEditor);
+        dateSpinner.setFont(customFont);
+        ((JComponent) dateSpinner.getEditor()).setBackground(new Color(255, 250, 240));
+        add(dateSpinner);
+
+        add(createLabel("Reason for Absence:"));
+        reasonArea = new JTextArea(3, 30);
+        styleTextArea(reasonArea);
+        add(new JScrollPane(reasonArea));
+
+        JButton submitBtn = createButton("Submit Report");
+        submitBtn.addActionListener(e -> submitReport());
+        add(submitBtn);
+
+        JButton loadBtn = createButton("Load Reports");
+        loadBtn.addActionListener(e -> loadReports());
+        add(loadBtn);
+
+        JButton processBtn = createButton("Show All & Count");
+        processBtn.addActionListener(e -> displayReports());
+        add(processBtn);
+
+        outputArea = new JTextArea(10, 50);
+        styleTextArea(outputArea);
+        outputArea.setEditable(false);
+        add(new JScrollPane(outputArea));
+
+        setVisible(true);
+    }
+
+    private JLabel createLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(customFont);
+        label.setForeground(red);
+        return label;
+    }
+
+    private JTextField createTextField(int columns) {
+        JTextField field = new JTextField(columns);
+        field.setFont(customFont);
+        field.setForeground(red);
+        field.setBackground(new Color(255, 250, 240));
+        return field;
+    }
+
+    private JButton createButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(customFont);
+        button.setBackground(gold);
+        button.setForeground(Color.BLACK);
+        button.setFocusPainted(false);
+        return button;
+    }
+
+    private void styleTextArea(JTextArea area) {
+        area.setFont(customFont);
+        area.setForeground(red);
+        area.setBackground(new Color(255, 250, 240));
+        area.setBorder(BorderFactory.createLineBorder(gold));
+    }
+
+    private void submitReport() {
+        String name = studentNameField.getText().trim();
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(dateSpinner.getValue());
+        String reason = reasonArea.getText().trim();
+
+        if (name.isEmpty() || reason.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields.");
+            return;
+        }
+
+        AbsenceReport report = new AbsenceReport(name, date, reason);
+        reports.add(report);
+        saveToCSV(report);
+        outputArea.setText("Absence report submitted for " + name);
+        clearFields();
+    }
+
+    private void clearFields() {
+        studentNameField.setText("");
+        reasonArea.setText("");
+        dateSpinner.setValue(new Date());
+    }
+
+    private void saveToCSV(AbsenceReport report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
+            writer.write(report.getStudentName() + "," + report.getDate() + "," + report.getReason().replace(",", ";"));
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadReports() {
+        reports.clear();
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",", 3);
+                if (parts.length == 3) {
+                    reports.add(new AbsenceReport(parts[0], parts[1], parts[2]));
+                }
+            }
+            outputArea.setText("Loaded " + reports.size() + " absence reports.");
+        } catch (IOException e) {
+            outputArea.setText("Error loading file.");
+            e.printStackTrace();
+        }
+    }
+
+    private void displayReports() {
+        StringBuilder sb = new StringBuilder();
+        for (AbsenceReport r : reports) {
+            sb.append(r).append("\n");
+        }
+        sb.append("\nTotal Reports: ").append(reports.size());
+        outputArea.setText(sb.toString());
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(AbsenceReportingSystem::new);
+    }
+}
+
+class AbsenceReport {
+    private String studentName, date, reason;
+
+    public AbsenceReport(String studentName, String date, String reason) {
+        this.studentName = studentName;
+        this.date = date;
+        this.reason = reason;
+    }
+
+    public String getStudentName() { return studentName; }
+    public String getDate() { return date; }
+    public String getReason() { return reason; }
+
+    public String toString() {
+        return studentName + " | " + date + " | Reason: " + reason;
+    }
+}
+
